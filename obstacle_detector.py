@@ -2,11 +2,15 @@ import socket
 import time
 import random
 
-# Class for Obstacle Detector functionality 
+# Class for Obstacle Detector functionality
 class ObstacleDetector:
     def __init__(self, port=9999, failure_chance=0.2):
         self.port = port
         self.failure_chance = failure_chance
+
+    def detect_obstacle(self):
+        """Dummy functionality for the critical process"""
+        return random.choice(["Obstacle Detected", "Clear"])
 
     def run_server(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -20,15 +24,26 @@ class ObstacleDetector:
 
             # Random crash/unresponsiveness
             if random.random() < self.failure_chance:
-                print("-.- ObstacleDetector CRASHED (simulated)!")
-                time.sleep(10)  # simulate being unresponsive
-            else:
-                if data == "HEARTBEAT":
-                    conn.send("ALIVE".encode())
+                mode = random.choice(["crash", "unresponsive"])
+                if mode == "crash":
+                    print("ObstacleDetector CRASHED (simulated)!")
+                    conn.close()   
+                    continue
+                else:
+                    print("-.- ObstacleDetector UNRESPONSIVE (simulated)!")
+                    time.sleep(10)  
+                    # no reply
+                    conn.close()
+                    continue
+
+            # Normal heartbeat response
+            if data == "HEARTBEAT":
+                response = f"ALIVE | Status: {self.detect_obstacle()}"
+                conn.send(response.encode())
 
             conn.close()
 
 
 if __name__ == "__main__":
-    detector = ObstacleDetector(port=9999, failure_chance=0.2)
+    detector = ObstacleDetector(port=9999, failure_chance=0.3)
     detector.run_server()

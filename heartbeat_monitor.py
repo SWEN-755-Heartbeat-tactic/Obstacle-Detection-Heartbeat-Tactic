@@ -32,12 +32,12 @@ class HeartbeatMonitor:
 
             # If too many failures, trigger emergency
             if self.failures >= self.max_failures:
-                print("(┬┬﹏┬┬) CRITICAL FAILURE DETECTED - triggering emergency protocol")
+                print("CRITICAL FAILURE DETECTED - triggering emergency protocol")
                 break
 
             time.sleep(self.interval)
 
-# Allowed standalone use
+
 if __name__ == "__main__":
     monitor = HeartbeatMonitor(interval=2, timeout=3, max_failures=3)
     monitor.start_monitoring()
