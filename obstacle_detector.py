@@ -12,7 +12,7 @@ class ObstacleDetector:
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind(('localhost', self.port))
         server.listen(5)
-        print(f"🚗 ObstacleDetector running on port {self.port}")
+        print(f"ObstacleDetector running on port {self.port}")
 
         while True:
             conn, addr = server.accept()
