@@ -1,36 +1,42 @@
 ## Heartbeat Tactic Implementation for Autonomous Vehicle System
 
 ### Languages & Frameworks
-- Python 3.6+ (No external dependencies required)
-- Standard Libraries : 
-    - `socket` - TCP communication between processes
-    - `threading` - Process isolation (simulated)
-    - `random` - Non-deterministic failure simulation
-    - `time` - Timing and sleep functions
+- Java 11+ (no external dependencies required)
+- Standard Libraries:
+  - `java.net` - TCP communication between processes
+  - `java.io` - Input/Output stream handling
+  - `java.util.Random` - Non-deterministic failure simulation
+  - `java.lang.Thread` - Sleep and timing functions
 
-#### Running the System
+### Running the System
 - Clone the project : `git clone https://github.com/SWEN-755-Heartbeat-tactic/Obstacle-Detection-Heartbeat-Tactic`
 
+#### Compile the Java files:
+- `javac ObstacleDetector.java`
+- `javac HeartbeatMonitor.java`
+
 - Terminal 1 - Start the Obstacle Detector
-    - `python obstacle_detector.py`
+    - `java ObstacleDetector`
 
 - Terminal 2 - Start the Heartbeat Monitor:
-    - `python heartbeat_monitor.py`
+    - `java HeartbeatMonitor`
 
 ### Core Implementation Files
-1. obstacle_detector.py - Critical process
+1. ObstacleDetector.java - Critical process
     - Implements obstacle detection functionality
     - Simulates random failures (crash/unresponsive)
     - Listens on TCP port 9999 for heartbeats
 
-2. heartbeat_monitor.py - Monitoring process
+2. HeartbeatMonitor.java - Monitoring process
     - Sends periodic heartbeat requests
     - Detects failures via timeouts
     - Triggers emergency protocol after consecutive failures
 
 ### How it works 
-- Monitor sends "HEARTBEAT" every 2 seconds to detector
-- Detector responds with status if working normally
-- Random failures simulated - either crash (immediate) or hang (10 seconds)
-- Monitor detects timeouts and counts failures
-- Emergency protocol activates after 3 failures
+- The monitor sends `HEARTBEAT` every 2 seconds to the detector
+- The detector responds with `ALIVE | Status: <Clear/Obstacle Detected>` if functioning normally
+- Random failures are simulated:
+    - Crash - closes connection immediately
+    - Unresponsive - delays response for 10 seconds
+- The monitor detects timeouts and counts consecutive failures
+- After 3 failures, the emergency protocol is triggered
