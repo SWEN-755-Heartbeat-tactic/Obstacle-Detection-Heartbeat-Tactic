@@ -15,6 +15,7 @@
 - `javac ObstacleDetector.java`
 - `javac HeartbeatMonitor.java`
 
+#### Run the Java files in different terminals:
 - Terminal 1 - Start the Obstacle Detector
     - `java ObstacleDetector`
 
