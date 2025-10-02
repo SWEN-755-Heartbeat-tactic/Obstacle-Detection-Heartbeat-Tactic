@@ -22,37 +22,40 @@ public class ObstacleDetector {
 
         while (true) {
             Socket client = server.accept();
-            BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 
-            String data = in.readLine();
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                 PrintWriter out = new PrintWriter(client.getOutputStream(), true)) {
 
-            // Simulated failure
-            if (random.nextDouble() < failureChance) {
-                if (random.nextBoolean()) {
-                    System.out.println("ObstacleDetector CRASHED (simulated)!");
-                    client.close();
-                    continue;
-                } else {
-                    System.out.println("ObstacleDetector UNRESPONSIVE (simulated)!");
-                    try { Thread.sleep(10000); } catch (InterruptedException e) {}
-                    client.close();
-                    continue;
+                String data = in.readLine();
+
+                // Simulated failure
+                if (random.nextDouble() < failureChance) {
+                    if (random.nextBoolean()) {
+                        System.out.println("ObstacleDetector CRASHED (simulated)!");
+                        client.close();
+                        continue;
+                    } else {
+                        System.out.println("ObstacleDetector UNRESPONSIVE (simulated)!");
+                        try { Thread.sleep(10000); } catch (InterruptedException e) {}
+                        client.close();
+                        continue;
+                    }
+                }
+
+                // Normal heartbeat
+                if ("HEARTBEAT".equals(data)) {
+                    String response = "ALIVE | Status: " + detectObstacle();
+                    out.println(response);
                 }
             }
-
-            // Normal heartbeat
-            if ("HEARTBEAT".equals(data)) {
-                String response = "ALIVE | Status: " + detectObstacle();
-                out.println(response);
-            }
-
-            client.close();
         }
     }
 
     public static void main(String[] args) throws IOException {
-        ObstacleDetector detector = new ObstacleDetector(9999, 0.3);
+        int port = args.length > 0 ? Integer.parseInt(args[0]) : 9999;
+        double failureChance = args.length > 1 ? Double.parseDouble(args[1]) : 0.3;
+
+        ObstacleDetector detector = new ObstacleDetector(port, failureChance);
         detector.runServer();
     }
 }
