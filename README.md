@@ -34,12 +34,12 @@
 
 
 ### Core Implementation Files
-1. ObstacleDetector.java – Primary critical process
+1. ObstacleDetector.java - Primary critical process
     - Implements obstacle detection functionality
     - Simulates random failures (crash/unresponsive)
     - Responds with ALIVE | Status: `<Clear OR Obstacle Detected>`
 
-2. BackupReplica.java – Redundant replica process
+2. BackupReplica.java - Redundant replica process
     - Acts as passive backup to primary
     - Responds to heartbeat with ALIVE | Status: Backup `<Clear OR Obstacle Detected>`
 
